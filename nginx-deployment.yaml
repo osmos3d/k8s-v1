@@ -27,6 +27,20 @@ spec:
           ports:
             - containerPort: 80
 
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 2
+            periodSeconds: 5
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
           volumeMounts:
             - name: nginx-html
               mountPath: /usr/share/nginx/html/index.html
