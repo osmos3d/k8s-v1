@@ -1,0 +1,30 @@
+cat > nginx-deployment.yaml <<'EOF'
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: my-nginx
+
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: node01
+
+      containers:
+        - name: nginx
+          image: my-nginx:v1
+          imagePullPolicy: Never
+
+          ports:
+            - containerPort: 80
+EOF
