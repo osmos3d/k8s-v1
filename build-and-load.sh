@@ -17,9 +17,12 @@ docker save "${IMAGE}" -o "${TAR_FILE}"
 
 
 echo "==> Importing image into containerd"
-ctr -n k8s.io images import ~/${TAR_FILE} && rm ~/${TAR_FILE}
+ctr -n k8s.io images import ${TAR_FILE} && rm ${TAR_FILE}
 
 echo "==> Removing local tar"
 rm "${TAR_FILE}"
+
+echo "==> Grep Image from k8s CTR images list "
+ctr -n k8s.io images list | grep ${IMAGE}
 
 echo "==> Done: ${IMAGE}"
