@@ -15,14 +15,18 @@ docker build -t "${IMAGE}" .
 echo "==> Saving ${IMAGE}"
 docker save "${IMAGE}" -o "${TAR_FILE}"
 
+echo "==> Copying image to ${WORKER}"
+scp "${TAR_FILE}" "${WORKER}:~/"
 
 echo "==> Importing image into containerd"
-ctr -n k8s.io images import ${TAR_FILE} && rm ${TAR_FILE}
+ssh "${WORKER}" \
+  "ctr -n k8s.io images import ~/${TAR_FILE} && rm ~/${TAR_FILE}"
 
 echo "==> Removing local tar"
 rm "${TAR_FILE}"
 
 echo "==> Grep Image from k8s CTR images list "
-ctr -n k8s.io images list | grep ${IMAGE}
+ssh "${WORKER}" \
+    "ctr -n k8s.io images list | grep ${IMAGE}"
 
 echo "==> Done: ${IMAGE}"
